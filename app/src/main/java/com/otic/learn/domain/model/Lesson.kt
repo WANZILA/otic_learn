@@ -1,4 +1,10 @@
 package com.otic.learn.domain.model
 
-class Lesson {
-}
+data class Lesson(
+    val id: String,
+    val courseId: String,
+    val title: String,
+    val content: String,
+    val videoUrl: String? = null,
+    val order: Int = 0
+)

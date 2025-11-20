@@ -1,4 +1,7 @@
 package com.otic.learn.domain.model
 
-class Progress {
-}
+data class Progress(
+    val courseId: String,
+    val completedLessonIds: List<String> = emptyList(),
+    val lastLessonId: String? = null
+)
