@@ -1,26 +1,25 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("com.google.gms.google-services")
-    id("com.google.dagger.hilt.android")
-    kotlin("kapt")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.dagger.hilt)
+    id("com.google.devtools.ksp")
+    alias(libs.plugins.google.gms.google.services)
+    alias(libs.plugins.google.firebase.crashlytics)
 }
 
 android {
     namespace = "com.otic.learn"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.otic.learn"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
     }
 
     buildTypes {
@@ -31,129 +30,124 @@ android {
                 "proguard-rules.pro"
             )
         }
-        debug {
-            isMinifyEnabled = false
-        }
     }
-
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = "11"
+    }
     buildFeatures {
         compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
-    }
-
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
-
-    kotlinOptions {
-        jvmTarget = "17"
     }
 }
 
 dependencies {
-    // Kotlin + core
-    implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
 
-    // Compose UI
-    val composeBom = platform("androidx.compose:compose-bom:2024.10.01")
-    implementation(composeBom)
-    androidTestImplementation(composeBom)
+    implementation(libs.firebase.storage)
+    implementation(libs.firebase.crashlytics)
+    //    implementation("coreLibraryDesugaring com.android.tools:desugar_jdk_libs:2.1.2")
+    //no need for adding  @RequiresApi(Build.VERSION_CODES.O)
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.2")
+    implementation("androidx.compose.material:material-icons-extended:1.5.4")
 
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3:1.3.0")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
-
-    // Navigation-Compose
-    implementation("androidx.navigation:navigation-compose:2.8.3")
-
-    // Hilt
-    implementation("com.google.dagger:hilt-android:2.52")
-    kapt("com.google.dagger:hilt-compiler:2.52")
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0") // ViewModel+Nav+Compose :contentReference[oaicite:1]{index=1}
-
-    // Firebase BoM (keeps libraries in sync)
-    implementation(platform("com.google.firebase:firebase-bom:33.7.0")) // stable BoM version :contentReference[oaicite:2]{index=2}
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.activity.compose)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.material3)
+    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation(libs.firebase.database)
+    implementation(libs.firebase.firestore)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
 
-    // Coroutines (for repositories/UseCases)
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
 
-    // Coil for images (course thumbnails)
-    implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    kspAndroidTest(libs.hilt.android.compiler)
+    // the library provides the hiltViewModel() function used in Composables.
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 
-    // Testing (optional now)
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.2.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+//    annotationProcessor(libs.androidx.room.compiler)
+
+    implementation(libs.squareup.retrofit)
+    implementation(libs.squareup.retrofit.gson)
+    implementation(libs.squareup.okhttp3.logging)
+
+    //viewModel
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+
+    //tracking data from remote server
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+
+    // images in json
+    implementation ("io.coil-kt:coil-compose:2.2.2")
+
+    //Navigation  2.7.6
+    implementation ("androidx.navigation:navigation-compose:2.8.7")
+
+    //extended Icons
+    implementation ("androidx.compose.material:material-icons-extended:1.5.4")
+    //system UI Controller
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.27.0")
+
+    //croping images
+    implementation("com.github.CanHub:Android-Image-Cropper:4.0.0")
+
+    /// ADDED (Room KTX for coroutines/transactions)
+    implementation("androidx.room:room-ktx:2.6.1")
+
+    /// ADDED (Room Paging bridge)
+    implementation("androidx.room:room-paging:2.6.1")
+
+    /// ADDED (Paging 3 runtime for DB→UI)
+    implementation("androidx.paging:paging-runtime-ktx:3.3.2")
+
+    /// ADDED (Paging 3 Compose adapter; placeholders off will be set in code)
+    implementation("androidx.paging:paging-compose:3.3.2")
+
+    /// ADDED (WorkManager for DeltaIn/DeltaOut workers)
+    implementation("androidx.work:work-runtime-ktx:2.9.1")
+
+    /// ADDED (Hilt integration for WorkManager; compiler via KSP)
+    implementation("androidx.hilt:hilt-work:1.2.0")
+    ksp("androidx.hilt:hilt-compiler:1.2.0")
+
+    /// ADDED (Coroutines — explicit to pin versions and avoid transitive drift)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
+
+    /// ADDED (Optional structured logging hooks for metrics: TTFI, queue length, retries)
+    implementation("com.jakewharton.timber:timber:5.0.1")
+
+//    implementation("androidx.hilt:hilt-work:1.2.0")        // ← required for Hilt+WorkManager
+//    kapt("androidx.hilt:hilt-compiler:1.2.0" )
+// ← THIS is often miss
+//    ksp("androidx.hilt:hilt-compiler:1.2.0")
+//    kapt ("androidx.hilt:hilt-compiler:1.2.0")
+    // (Optional) test variants:
+//    kaptAndroidTest(libs.hilt.android.compiler) // instead of kspAndroidTest(...)
+
+    // --- Tests (if you use Hilt in androidTest) ---
+    androidTestImplementation(libs.hilt.android.testing)
+    kspAndroidTest(libs.hilt.android.compiler)    // Google Hilt (tests)
+    kspAndroidTest("androidx.hilt:hilt-compiler:1.2.0") // AndroidX Hilt (tests) if needed
+
 }
-
-//plugins {
-//    alias(libs.plugins.android.application)
-//    alias(libs.plugins.kotlin.android)
-//    alias(libs.plugins.kotlin.compose)
-//}
-//
-//android {
-//    namespace = "com.otic.learn"
-//    compileSdk = 36
-//
-//    defaultConfig {
-//        applicationId = "com.otic.learn"
-//        minSdk = 24
-//        targetSdk = 36
-//        versionCode = 1
-//        versionName = "1.0"
-//
-//        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-//    }
-//
-//    buildTypes {
-//        release {
-//            isMinifyEnabled = false
-//            proguardFiles(
-//                getDefaultProguardFile("proguard-android-optimize.txt"),
-//                "proguard-rules.pro"
-//            )
-//        }
-//    }
-//    compileOptions {
-//        sourceCompatibility = JavaVersion.VERSION_11
-//        targetCompatibility = JavaVersion.VERSION_11
-//    }
-//    kotlinOptions {
-//        jvmTarget = "11"
-//    }
-//    buildFeatures {
-//        compose = true
-//    }
-//}
-//
-//dependencies {
-//
-//    implementation(libs.androidx.core.ktx)
-//    implementation(libs.androidx.lifecycle.runtime.ktx)
-//    implementation(libs.androidx.activity.compose)
-//    implementation(platform(libs.androidx.compose.bom))
-//    implementation(libs.androidx.ui)
-//    implementation(libs.androidx.ui.graphics)
-//    implementation(libs.androidx.ui.tooling.preview)
-//    implementation(libs.androidx.material3)
-//    testImplementation(libs.junit)
-//    androidTestImplementation(libs.androidx.junit)
-//    androidTestImplementation(libs.androidx.espresso.core)
-//    androidTestImplementation(platform(libs.androidx.compose.bom))
-//    androidTestImplementation(libs.androidx.ui.test.junit4)
-//    debugImplementation(libs.androidx.ui.tooling)
-//    debugImplementation(libs.androidx.ui.test.manifest)
-//}

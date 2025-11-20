@@ -11,6 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+//import com.otic.learn.core.navigation.AppNavHost
+//import com.otic.learn.core.ui.OticTheme
 import com.otic.learn.ui.theme.OticLearnTheme
 
 class MainActivity : ComponentActivity() {
@@ -26,6 +28,12 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             }
+//            setContent {
+//                OticTheme {
+//                    AppNavHost()
+//                }
+//            }
+
         }
     }
 }

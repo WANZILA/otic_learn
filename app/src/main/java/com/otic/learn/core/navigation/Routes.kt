@@ -11,4 +11,8 @@ object Routes {
     const val COURSES = "courses"
     const val LESSON = "lesson"
     const val PROFILE = "profile"
+
+    const val AI_TUTOR = "ai_tutor"
+    const val FORUMS = "forums"
+    const val NOTIFICATIONS = "notifications"
 }

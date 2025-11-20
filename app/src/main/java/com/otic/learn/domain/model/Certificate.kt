@@ -1,4 +1,9 @@
 package com.otic.learn.domain.model
 
-class Certificate {
-}
+data class Certificate(
+    val id: String,
+    val studentId: String,
+    val courseId: String,
+    val issuedAtMillis: Long,
+    val downloadUrl: String?
+)
