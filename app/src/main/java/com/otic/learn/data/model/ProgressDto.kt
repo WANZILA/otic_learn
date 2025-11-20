@@ -1,4 +1,6 @@
 package com.otic.learn.data.model
 
-class ProgressDto {
-}
+data class ProgressDto(
+    val completedLessonIds: List<String> = emptyList(),
+    val lastLessonId: String? = null
+)

@@ -24,16 +24,16 @@ object AppModule {
     @Provides @Singleton fun provideFirestore(): FirebaseFirestore =
         FirebaseFirestore.getInstance()
 
-//    @Provides @Singleton fun provideAuthRepository(
-//        auth: FirebaseAuth
-//    ): AuthRepository = AuthRepositoryImpl(auth)
-//
-//    @Provides @Singleton fun provideCoursesRepository(
-//        db: FirebaseFirestore
-//    ): CoursesRepository = CoursesRepositoryImpl(db)
-//
-//    @Provides @Singleton fun provideProgressRepository(
-//        db: FirebaseFirestore,
-//        auth: FirebaseAuth
-//    ): ProgressRepository = ProgressRepositoryImpl(db, auth)
+    @Provides @Singleton fun provideAuthRepository(
+        auth: FirebaseAuth
+    ): AuthRepository = AuthRepositoryImpl(auth)
+
+    @Provides @Singleton fun provideCoursesRepository(
+        db: FirebaseFirestore
+    ): CoursesRepository = CoursesRepositoryImpl(db)
+
+    @Provides @Singleton fun provideProgressRepository(
+        db: FirebaseFirestore,
+        auth: FirebaseAuth
+    ): ProgressRepository = ProgressRepositoryImpl(db, auth)
 }
