@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "969799811718",
-    "project_id": "otic-learn",
-    "storage_bucket": "otic-learn.firebasestorage.app"
+    "project_number": "223550165042",
+    "project_id": "otic-learn-final",
+    "storage_bucket": "otic-learn-final.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:969799811718:android:310134e709805c8eab4707",
+        "mobilesdk_app_id": "1:223550165042:android:fcb180023f4d142de1ec2b",
         "android_client_info": {
           "package_name": "com.otic.learn"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAGOLDiRRUSrA_a2IkM4WSbH0V3LR7jV04"
+          "current_key": "AIzaSyBgVy4U6xKhBMNqXxWHYhwN79dxyFTvyU8"
         }
       ],
       "services": {
