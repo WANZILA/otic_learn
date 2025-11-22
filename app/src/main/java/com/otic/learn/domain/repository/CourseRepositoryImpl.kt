@@ -60,6 +60,82 @@ class CourseRepositoryImpl @Inject constructor(
             registration.remove()
         }
     }
+
+    override fun observeAllCourses(): Flow<List<Course>> = callbackFlow {
+        val query = firestore.collection("courses")
+
+        val registration = query.addSnapshotListener { snapshot, error ->
+            if (error != null) {
+                close(error)
+                return@addSnapshotListener
+            }
+
+            val docs = snapshot?.documents ?: emptyList()
+
+            launch {
+                val courses = docs.mapNotNull { it.toCourse() }
+                trySend(courses).isSuccess
+            }
+        }
+
+        awaitClose {
+            registration.remove()
+        }
+    }
+
+    override fun observeEnrollment(
+        studentId: String,
+        courseId: String
+    ): Flow<Enrollment?> = callbackFlow {
+        val query = firestore.collection("enrollments")
+            .whereEqualTo("studentId", studentId)
+            .whereEqualTo("courseId", courseId)
+            .limit(1)
+
+        val registration = query.addSnapshotListener { snapshot, error ->
+            if (error != null) {
+                close(error)
+                return@addSnapshotListener
+            }
+
+            val doc = snapshot?.documents?.firstOrNull()
+            val enrollment = doc?.toEnrollment()
+            trySend(enrollment).isSuccess
+        }
+
+        awaitClose { registration.remove() }
+    }
+
+    override suspend fun enroll(studentId: String, courseId: String) {
+        // Prevent dupes by checking if already enrolled
+        val existing = firestore.collection("enrollments")
+            .whereEqualTo("studentId", studentId)
+            .whereEqualTo("courseId", courseId)
+            .limit(1)
+            .get()
+            .await()
+
+        if (existing.documents.isNotEmpty()) return
+
+        val now = System.currentTimeMillis()
+        val enrollmentId = "enroll_${studentId}_${courseId}"
+
+        val data = mapOf(
+            "courseId" to courseId,
+            "studentId" to studentId,
+            "status" to "ACTIVE",
+            "startDateMillis" to now,
+            "endDateMillis" to null,
+            "percentComplete" to 0L,
+            "lastAccessedAtMillis" to now
+        )
+
+        firestore.collection("enrollments")
+            .document(enrollmentId)
+            .set(data)
+            .await()
+    }
+
 }
 
 // ---- Mapping helpers ----
